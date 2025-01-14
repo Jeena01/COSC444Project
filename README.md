@@ -1,6 +1,6 @@
 # COSC444Project
 
-Group members: Bridgette Hunt, Hamza , Jeena
+Group members: Bridgette, Hamza, Aadil, Jeena
 
 Topic - Human Pose Estimation
 
