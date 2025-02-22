@@ -1,0 +1,24 @@
+function test()
+    path = pwd;
+    try 
+        cd ./code/pose_estimation_code_release_v1.21/pose_estimation_code_release_v1.21/code;
+        load("detenv.mat");
+        fprintf("starting\n");
+        startup;
+        cd ../../../voc-release3.1/voc-release3.1/;
+        pwd
+        fprintf("compiling\n");
+        compile;
+        fprintf("testing\n");
+        cd ../../..
+    
+        det_pars.ubfpff_scale = 3;
+        det_pars.ubfpff_thresh = -0.75;
+        det_pars.iou_thresh = 0.9;
+        
+        image = imread('test_images/img_main.jpg');
+        [ubfdetections] = DetectStillImage2(image, 'pff_model_upperbody_final.mat', 'haarcascade_frontalface_alt2.xml', det_pars, 2);
+    catch e
+        cd(path)
+    end
+end
