@@ -70,14 +70,14 @@ for dix = 1:size(T.D,2)
     end
     if ~isfield(pars,'draw_segms') || pars.draw_segms
       curSegm = PaintSegmentation(T.PM(dix).segm, class_id2cols(class_id));
-      imSegm = PasteOverImage(curSegm, imSegm, T.PM(dix).bb);
+      imSegm = PasteOverImage(curSegm, im, T.PM(dix).bb);
     end
     if isfield(pars,'draw_sticks') && pars.draw_sticks
       curSticks = PaintSticks(T.PM(dix).sticks, [size(T.PM(dix).segm,2) size(T.PM(dix).segm,1)], class_id2cols(class_id));
-      imSegm = PasteOverImage(curSticks, imSegm, T.PM(dix).bb);
+      imSegm = PasteOverImage(curSticks, im, T.PM(dix).bb);
     end
     if isfield(pars,'draw_bb') && pars.draw_bb
-      imSegm = PaintBB(imSegm, T.D(2:5,dix), pars.bb_col, -1:1);      % paint detection bb
+      imSegm = PaintBB(im, T.D(2:5,dix), pars.bb_col, -1:1);      % paint detection bb
     end
     safe_imwrite(imSegm, segm_fname);
   end

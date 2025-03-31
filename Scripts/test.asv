@@ -1,7 +1,8 @@
 function test(varargin)
+close all;
 setup;
-%load("Calvin detector/pose_estimation_code_release_v1.22/code/env.mat");
-load("Calvin detector/calvin_upperbody_detector_v1.04/code/detenv.mat");
+load("Calvin detector/pose_estimation_code_release_v1.22/code/env.mat");
+%load("Calvin detector/calvin_upperbody_detector_v1.04/code/detenv.mat");
 pic = 'rock_climbing.jpg';
 if (nargin > 0)
     pic = varargin{1};
@@ -20,7 +21,7 @@ points = detectSIFTFeatures(grayImg, "NumLayersInOctave",NumOctaves, "ContrastTh
 % Extract feature descriptors at the detected keypoints
 [features, validPoints] = extractFeatures(grayImg, points);
 
-figure;
+figure(1);
 imshow(img);
 hold on;
 
@@ -71,7 +72,7 @@ end
 
 
 % Display the original image with clustered keypoints
-figure;
+figure(2);
 imshow(img);
 hold on;
 colors = lines(numClusters);
@@ -85,10 +86,7 @@ for i = 1:numKeypoints
 
 end
 
-
 hold off;
-
-
 
 % Find the frequency of each cluster label
 [uniqueLabels, ~, labelIndices] = unique(clusterLabels); % Get unique labels and indices
@@ -113,7 +111,7 @@ clusterIndices = find(clusterLabels == clusterId);
 % Get the coordinates (x, y) of the keypoints in the specified cluster
 xCoords = validPoints.Location(clusterIndices, 1);  % x-coordinates
 yCoords = validPoints.Location(clusterIndices, 2);  % y-coordinates
-Radii = sigma* validPoints.Scale(clusterIndices);
+Radii = sigma * validPoints.Scale(clusterIndices);
 % Find the extremities (top, bottom, left, right)
 
 top = max(min(yCoords-Radii), 1);  % Ensure top does not go below 1
@@ -133,8 +131,18 @@ disp(['Bottom: ', num2str(bottom)]);
 disp(['Left: ', num2str(left)]);
 disp(['Right: ', num2str(right)]);
 
-%parse_params_Buffy3and4andPascal.use_fg_high = false;
-%[T, sticks_imgcoor] = PoseEstimStillImage(pwd, '/', pic, 1, 'full', [1 1 987 1244]', fghigh_params, parse_params_Buffy3and4andPascal, [], pm2segms_params, true);
-[ubfdetections] = DetectStillImage(pic,'pff_model_upperbody_final.mat',[],det_pars,2)
+x = left; y = top; w = right - left; h = bottom - top;
+figure(3),
+imshow(img),
+hold on;
+line([x,x+w],[y,y], "LineWidth", 5);
+line([x,x+w],[y+h,y+h], "LineWidth", 5);
+line([x,x],[y,y+h], "LineWidth", 5);
+line([x+w,x+w],[y,y+h], "LineWidth", 5);
+hold off;
+
+bb = [x y w h]';
+parse_params_Buffy3and4andPascal.use_fg_high = false;
+[T, sticks_imgcoor] = PoseEstimStillImage(pwd, 'Images/', pic, 1, 'full', bb, fghigh_params, parse_params_Buffy3and4andPascal, [], pm2segms_params, true);
 
 end
