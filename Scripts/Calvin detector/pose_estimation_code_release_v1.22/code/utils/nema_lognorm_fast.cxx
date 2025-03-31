@@ -54,10 +54,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   int D = mxGetM( prhs[ 0 ] );
 
   // check input dimensions
-  const int *nX = mxGetDimensions( prhs[ 0 ] );
-  const int *nMU = mxGetDimensions( prhs[ 1 ] );
-  const int *nIS = mxGetDimensions( prhs[ 2 ] );
-  const int *nK = mxGetDimensions( prhs[ 3 ] );
+  const long long unsigned int *nX = mxGetDimensions( prhs[ 0 ] );
+  const long long unsigned int  *nMU = mxGetDimensions( prhs[ 1 ] );
+  const long long unsigned int  *nIS = mxGetDimensions( prhs[ 2 ] );
+  const long long unsigned int  *nK = mxGetDimensions( prhs[ 3 ] );
 
   if ( nX[ 0 ] != D || nX[ 1 ] != N ||
        nMU[ 0 ] != D || nMU[ 1 ] != 1 ||
@@ -65,10 +65,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
        nK[ 0 ] != 1 || nK[ 1 ] != 1 ) {
     std::cout << "D: " << D << std::endl <<
       "N: " << N << std::endl;
-    displayDims( "X", nX, 2 );
-    displayDims( "MU", nMU, 2 );
-    displayDims( "IS", nIS, 2 );
-    displayDims( "K", nK, 2 );
+    displayDims( "X", (int*) nX, 2 );
+    displayDims( "MU", (int*) nMU, 2 );
+    displayDims( "IS", (int*) nIS, 2 );
+    displayDims( "K", (int*) nK, 2 );
     mexErrMsgTxt("Input dimensions are not consistent.");
   }
 

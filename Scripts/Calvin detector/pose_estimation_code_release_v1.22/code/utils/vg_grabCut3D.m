@@ -201,6 +201,7 @@ flow = [];
 
 % --- INITIALIZE D Graph Cut -----
 [nrows,ncols,ndims,nframes]=size(C);
+pwd
 state.dgcHandle=mexDGC('initialize',uint32(nrows*ncols*nframes),uint32(pp.E_n));
 nEnergies=zeros(4,size(pp.E_w,2));
 nEnergies([2 3],:)=pp.E_w;

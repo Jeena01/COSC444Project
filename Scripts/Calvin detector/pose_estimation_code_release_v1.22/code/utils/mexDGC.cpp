@@ -130,8 +130,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     // IMP: might want to call g->maxflow(), if the dgc code does not initialize the search trees properly
     g->maxflow();
     // --- Now return back this handle --
-    int numBytes=sizeof(GraphInt*);
-    int dims[2];dims[0]=numBytes;dims[1]=1;
+    long long unsigned int numBytes=sizeof(GraphInt*);
+    long long unsigned int dims[2]; dims[0]=numBytes;dims[1]=1;
     plhs[0]=mxCreateNumericArray(2,dims,mxINT8_CLASS,mxREAL);
     memcpy(mxGetData(plhs[0]),&g,numBytes);
     //myPrintf("Sent graph = %x\n",*((unsigned int*)mxGetData(plhs[0])));
@@ -202,7 +202,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     //int flow=g->maxflow(false);
 
     // --- Now prepare the output ------------
-    int dims[2];dims[0]=1;dims[1]=g->get_node_num();
+    long long unsigned int  dims[2];dims[0]=1;dims[1]=g->get_node_num();
     plhs[0]=mxCreateNumericArray(2,dims,mxUINT8_CLASS,mxREAL);
     plhs[1]=mxCreateDoubleScalar((double)flow);
     unsigned char *segmentIter=(unsigned char*)mxGetData(plhs[0]);
