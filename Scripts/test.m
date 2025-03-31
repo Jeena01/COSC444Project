@@ -1,7 +1,7 @@
 function test(varargin)
 setup;
-%load("Calvin detector/pose_estimation_code_release_v1.22/code/env.mat");
-load("Calvin detector/calvin_upperbody_detector_v1.04/code/detenv.mat");
+load("Calvin detector/pose_estimation_code_release_v1.22/code/env.mat");
+%load("Calvin detector/calvin_upperbody_detector_v1.04/code/detenv.mat");
 pic = 'rock_climbing.jpg';
 if (nargin > 0)
     pic = varargin{1};
@@ -134,8 +134,6 @@ disp(['Left: ', num2str(left)]);
 disp(['Right: ', num2str(right)]);
 
 %parse_params_Buffy3and4andPascal.use_fg_high = false;
-%[T, sticks_imgcoor] = PoseEstimStillImage(pwd, '/', pic, 1, 'full', [1 1 987 1244]', fghigh_params, parse_params_Buffy3and4andPascal, [], pm2segms_params, true);
-
-[ubfdetections] = DetectStillImage(pic,'pff_model_upperbody_final.mat',[],det_pars,2)
+[T, sticks_imgcoor] = PoseEstimStillImage(pwd, 'Images/', pic, 1, 'full', [left top right bottom]', fghigh_params, parse_params_Buffy3and4andPascal, [], pm2segms_params, true);
 
 end
