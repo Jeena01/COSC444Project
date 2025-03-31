@@ -67,7 +67,8 @@ void resize1dtran(double *src, int sheight, double *dst, int dheight,
   }
 
   // resize each column of each color channel
-  bzero(dst, chan*width*dheight*sizeof(double));
+  memset(dst, 0, chan*width*dheight*sizeof(double));
+
   for (int c = 0; c < chan; c++) {
     for (int x = 0; x < width; x++) {
       double *s = src + c*width*sheight + x*sheight;
@@ -82,7 +83,7 @@ void resize1dtran(double *src, int sheight, double *dst, int dheight,
 // returns resized image
 mxArray *resize(const mxArray *mxsrc, const mxArray *mxscale) {
   double *src = (double *)mxGetPr(mxsrc);
-  const int *sdims = mxGetDimensions(mxsrc);
+  const unsigned long long int *sdims = mxGetDimensions(mxsrc);
   if (mxGetNumberOfDimensions(mxsrc) != 3 || 
       mxGetClassID(mxsrc) != mxDOUBLE_CLASS)
     mexErrMsgTxt("Invalid input");  
@@ -91,7 +92,7 @@ mxArray *resize(const mxArray *mxsrc, const mxArray *mxscale) {
   if (scale > 1)
     mexErrMsgTxt("Invalid scaling factor");   
 
-  int ddims[3];
+  unsigned long long ddims[3];
   ddims[0] = (int)round(sdims[0]*scale);
   ddims[1] = (int)round(sdims[1]*scale);
   ddims[2] = sdims[2];

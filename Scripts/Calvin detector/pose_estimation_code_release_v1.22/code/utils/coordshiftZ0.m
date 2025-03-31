@@ -12,6 +12,9 @@ stepo = 360/imo;                                                      % stepo = 
 y=coord(1);
 x=coord(2);
 o=coord(3);
+if (isnan(o))
+    o = 1;
+end
 
 vx = -vx;
 vy = -vy;

@@ -1,6 +1,7 @@
 #include <math.h>
 #include <sys/types.h>
 #include "mex.h"
+#include <stdint.h>
 
 /*
  * Generalized distance transforms.
@@ -47,7 +48,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
   if (mxGetClassID(prhs[0]) != mxDOUBLE_CLASS)
     mexErrMsgTxt("Invalid input");
 
-  const int *dims = mxGetDimensions(prhs[0]);
+  const unsigned long long *dims = mxGetDimensions(prhs[0]);
   double *vals = (double *)mxGetPr(prhs[0]);
   double ax = mxGetScalar(prhs[1]);
   double bx = mxGetScalar(prhs[2]);

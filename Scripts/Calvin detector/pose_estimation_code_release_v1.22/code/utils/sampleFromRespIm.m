@@ -122,43 +122,52 @@ for big_iter = 1:nsamples + 1,
     % -> [1 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2]
     % this routine is identical to that in the first parse
     for p = model.pre(2:end),
-        parType = model.parents{p};
-        % as orient prior may not be symmetric then turn it around for messages from parent to child
-        currOrient = model.orient(p,[1 end:-1:2]);
+        try 
+            parType = model.parents{p};
+            % as orient prior may not be symmetric then turn it around for messages from parent to child
+            currOrient = model.orient(p,[1 end:-1:2]);
+               
+            currCoor = coordshiftZ0([Y(parType),X(parType),I(parType)],size(respIm),-mean_y(p),-mean_x(p));
+            subcube = zeros(1, 1,imo);
+            subcube(1,1,currCoor(3)) = 1;
+            subcube = reshape(subcube,1,imo);
+            subcube = cat(2,subcube(:,(imo/2+1):end),subcube,subcube(:,1:(imo/2-1)));
+            
+            subcube = conv2(subcube,fliplr(currOrient),'valid');
+            subcube = reshape(subcube,[1 1 imo]);
+            
+            sc_y1 = max(currCoor(1)-model.box(p), 1);
+            sc_y2 = min(currCoor(1)+model.box(p)-1, imy);
+            sc_x1 = max(currCoor(2)-model.box(p), 1);
+            sc_x2 = min(currCoor(2)+model.box(p)-1, imx);
+            
+            subcube = repmat(subcube,[sc_y2-sc_y1+1 sc_x2-sc_x1+1]);
+            % each node (respIm) is already multiplied by all the incoming messages from its children
+            % so we can just multiply it by conditional from its parent
+            subcube = respIm(sc_y1:sc_y2, sc_x1:sc_x2, :, p) .* subcube;
+    
+            % by the definition the states outside the cube have 0 probability
+            subcube = subcube / sum(subcube(:)); %renormalize the conditional probability to sum to one
+            if BEST,
+                [~,ii] = max(subcube(:));
+            else
+               %Sample
+               ii = find(sampleWithR(subcube(:).^prob_exp_smoothing,2),1);
+            end
+            if isempty(ii) 
+               ii = 1;
+            end
+    
+            [offset(1),offset(2),offset(3)] = ind2sub(size(subcube),ii);
            
-        currCoor = coordshiftZ0([Y(parType),X(parType),I(parType)],size(respIm),-mean_y(p),-mean_x(p));
-        subcube = zeros(1, 1,imo);
-        subcube(1,1,currCoor(3)) = 1;
-        subcube = reshape(subcube,1,imo);
-        subcube = cat(2,subcube(:,(imo/2+1):end),subcube,subcube(:,1:(imo/2-1)));
-        
-        subcube = conv2(subcube,fliplr(currOrient),'valid');
-        subcube = reshape(subcube,[1 1 imo]);
-        
-        sc_y1 = max(currCoor(1)-model.box(p), 1);
-        sc_y2 = min(currCoor(1)+model.box(p)-1, imy);
-        sc_x1 = max(currCoor(2)-model.box(p), 1);
-        sc_x2 = min(currCoor(2)+model.box(p)-1, imx);
-        
-        subcube = repmat(subcube,[sc_y2-sc_y1+1 sc_x2-sc_x1+1]);
-        % each node (respIm) is already multiplied by all the incoming messages from its children
-        % so we can just multiply it by conditional from its parent
-        subcube = respIm(sc_y1:sc_y2, sc_x1:sc_x2, :, p) .* subcube;
-
-        % by the definition the states outside the cube have 0 probability
-        subcube = subcube / sum(subcube(:)); %renormalize the conditional probability to sum to one
-        if BEST,
-            [trash,ii] = max(subcube(:));
-        else
-           %Sample
-           ii = find(sampleWithR(subcube(:).^prob_exp_smoothing,2),1);
+            
+            Y(p) = sc_y1+offset(1)-1;
+            X(p) = sc_x1+offset(2)-1;
+            I(p) = offset(3);
+            P(p) = subcube(ii);
+        catch ignored
+            continue
         end
-        [offset(1) offset(2) offset(3)] = ind2sub(size(subcube),ii);
-        Y(p) = sc_y1+offset(1)-1;
-        X(p) = sc_x1+offset(2)-1;
-        I(p) = offset(3);
-        P(p) = subcube(ii);
-   
     end
     
     % calc prob of the configuration
