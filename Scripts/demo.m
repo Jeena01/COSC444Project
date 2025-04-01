@@ -1,0 +1,1 @@
+main('climb0.jpg','climb1.jpg','climb2.jpg','climb3.jpg','climb4.jpg','climb5.jpg','climb6.jpg','climb7.jpg');

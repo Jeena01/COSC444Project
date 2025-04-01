@@ -73,7 +73,7 @@ for dix = dixs
   % info
   class_id = T.D(9,dix); classname = class_id2name(class_id);
   if verbose
-    newline;
+    disp(' ');
     display(['Parsing frame ' num2str(T.D(1,dix)')]);
     display(['Class: ' classname]);
   end

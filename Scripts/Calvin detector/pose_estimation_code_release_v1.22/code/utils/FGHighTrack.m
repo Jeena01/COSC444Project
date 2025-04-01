@@ -70,7 +70,7 @@ for rix = 1:length(R)
     dix_begin = dixs(2,frm_begin);         % dix point to T.D; whereas frm point to the current chunk
     dix_end = min(dixs(2,end),dix_begin+pars.temp_win-1);
     
-    newline;
+    disp(' ');
     display(['Foreground highlighting chunk ' num2str(T.D(1,[dix_begin dix_end]))]);
     
     % loop over the grabcuts to carry out (multi-grabcut)

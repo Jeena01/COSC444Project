@@ -40,7 +40,7 @@ for dix = 1:size(T.D,2)
   end
 
   % info
-  newline;
+  disp(' ');
   display(['Segmenting detection ' num2str(T.D(:,dix)')]);
   class_id = T.D(9,dix); classname = class_id2name(class_id);
   display(['Class: ' classname]);
