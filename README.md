@@ -1,15 +1,8 @@
-# COSC444Project
+# COSC 444 Project: Human Pose Estimation
 
-Group members: Bridgette, Hamza, Aadil, Jeena
-
-Topic - Human Pose Estimation
-
-Shortlisted articles
-
-Traditional Image Processing
-
-A Study on 3D Human Pose Estimation with a Hybrid Algorithm of Spatio-temporal Semantic Graph Attention and Deep Learning
-https://www.itc.ktu.lt/index.php/ITC/article/view/37243
-
-Deep learning approaches
+## Team Members
+* Bridgette Hunt
+* Hamza Muhammad Anwar
+* Aadil Shaji
+* Jeena Javahar
 
