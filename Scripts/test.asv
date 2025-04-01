@@ -129,6 +129,12 @@ disp(['Left: ', num2str(left)]);
 disp(['Right: ', num2str(right)]);
 
 x = left; y = top; w = right - left; h = bottom - top;
+
+%w = round(0.218947368421053 * imageWidth);
+%h = round(0.154411764705882 * imageHeight);
+%x = round(0.397426470588235 * imageWidth);
+%y = round(0.479473684210526 * imageHeight) - h;
+
 figure(3),
 imshow(img),
 hold on;
@@ -139,11 +145,9 @@ line([x+w,x+w],[y,y+h], "LineWidth", 5);
 hold off;
 
 bb = [x y w h]';
-
-left = 0.397426470588235 * imageWidth;
-right = 0.154411764705882
-bb = [0.397426470588235,0.479473684210526,0.154411764705882,0.218947368421053*]
 parse_params_Buffy3and4andPascal.use_fg_high = false;
 [T, sticks_imgcoor] = PoseEstimStillImage(pwd, 'Images/', pic, 1, 'full', bb, fghigh_params, parse_params_Buffy3and4andPascal, [], pm2segms_params, true);
 
+im = img(:,:)
+im = PaintSegmentation(T.PM(dix).segm, class_id2cols(class_id));
 end

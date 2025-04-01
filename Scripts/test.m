@@ -148,4 +148,7 @@ bb = [x y w h]';
 parse_params_Buffy3and4andPascal.use_fg_high = false;
 [T, sticks_imgcoor] = PoseEstimStillImage(pwd, 'Images/', pic, 1, 'full', bb, fghigh_params, parse_params_Buffy3and4andPascal, [], pm2segms_params, true);
 
+segmentIm = imread(sprintf('segms_full/%s',pic));
+figure(4);
+imshow(segmentIm);
 end
