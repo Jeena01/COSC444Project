@@ -18,7 +18,6 @@ function DetectAndEstim(img_dir,img_name,pffubfmodel_path,facemodel_path,det_par
     %convert coordinates from [x1 y1 x2 y2] to [x y width height]
     detections(:,3:4) = detections(:,3:4) - detections(:,1:2) +1;
     
-    img_name_format = [imgname '_%d' imgext];
     temp_dir = 'temp';
     if ~exist(fullfile(img_dir,temp_dir),'dir')
       mkdir(fullfile(img_dir,temp_dir));
@@ -28,21 +27,18 @@ function DetectAndEstim(img_dir,img_name,pffubfmodel_path,facemodel_path,det_par
       mkdir(fullfile(img_dir,dets_dir));
     end
     
-    img = imread(fullfile(img_dir,Files(idx).name));
+    img = imread(fullfile(img_dir,img_name));
     
     for dix=1:size(detections,1) % run pose estimation for every detection
-      imwrite(img,fullfile(img_dir,temp_dir,sprintf(img_name_format,dix)));
-      [T(dix) stick_coor{dix}] = PoseEstimStillImage(img_dir,temp_dir,img_name_format,dix, classname, round(detections(dix,1:4)'), fghigh_pars, parse_pars, addinf_pars, segm_pars, verbose);
-      delete(fullfile(img_dir,temp_dir,sprintf(img_name_format,dix)));
+      [T(dix) stick_coor{dix}] = PoseEstimStillImage(pwd,'/Images',img_name,dix, classname, round(detections(dix,1:4)'), fghigh_pars, parse_pars, addinf_pars, segm_pars, verbose);      
     end
     
     if ~isempty(detections)
       for d=1:size(detections,1)
         img = PaintBB(img,round(detections(d,1:4)),[1 0 0],[1 2 3]);
+        figure(d),
+        imshow(img);
       end
-    end
-    detfile = fullfile(img_dir,dets_dir,[imgname '_d' imgext]);
-    imwrite(img,detfile);
     end
     save(outname_mat,'T','stick_coor','detections');
 end

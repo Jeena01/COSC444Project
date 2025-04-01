@@ -1,6 +1,7 @@
 function test(varargin)
 close all;
 setup;
+
 load("Calvin detector/pose_estimation_code_release_v1.22/code/env.mat");
 %load("Calvin detector/calvin_upperbody_detector_v1.04/code/detenv.mat");
 pic = 'rock_climbing.jpg';
@@ -15,7 +16,7 @@ img = imread(pic); % Replace with your image file
 grayImg = rgb2gray(img);
 MinContrast = 0.02;   % Minimum contrast threshold (higher means fewer keypoints)
 NumOctaves = 7;       % Number of octaves for scale-space (higher value captures more scales)
-sigma =10;
+sigma = 10;
 % Detect SIFT features with specified parameters
 points = detectSIFTFeatures(grayImg, "NumLayersInOctave",NumOctaves, "ContrastThreshold",MinContrast, Sigma= sigma);
 % Extract feature descriptors at the detected keypoints
@@ -100,7 +101,7 @@ mostFrequentCluster = uniqueLabels(maxIndex);
 disp(['The most frequent cluster label is: ', num2str(mostFrequentCluster)]);
 disp(['It appears ', num2str(maxCount), ' times.']);
 
-[imageWidth, imageHeight] = size(grayImg); 
+[imageHeight, imageWidth] = size(grayImg); 
 
 % Cluster label (example: we want the extremities for cluster 1)
 clusterId = mostFrequentCluster;
@@ -114,15 +115,11 @@ yCoords = validPoints.Location(clusterIndices, 2);  % y-coordinates
 Radii = sigma * validPoints.Scale(clusterIndices);
 % Find the extremities (top, bottom, left, right)
 
-top = max(min(yCoords-Radii), 1);  % Ensure top does not go below 1
-bottom = min(max(yCoords+Radii), imageHeight);  % Ensure bottom does not exceed image height
+top = max(min(yCoords), 1);  % Ensure top does not go below 1
+bottom = min(max(yCoords), imageHeight);  % Ensure bottom does not exceed image height
 
-%top = min(max(yCoords+Radii), imageHeight);
-%bottom = max(min(yCoords-Radii), 1);
-load("Calvin detector/pose_estimation_code_release_v1.22/code/env.mat");
-
-left = max(min(xCoords-Radii), 1);  % Ensure left does not go below 1
-right = min(max(xCoords+Radii), imageWidth);  % Ensure right does not exceed image width
+left = max(min(xCoords), 1);  % Ensure left does not go below 1
+right = min(max(xCoords), imageWidth);  % Ensure right does not exceed image width
 
 % Display the result
 disp(['Cluster ', num2str(clusterId), ' extremities:']);
@@ -142,6 +139,10 @@ line([x+w,x+w],[y,y+h], "LineWidth", 5);
 hold off;
 
 bb = [x y w h]';
+
+left = 0.397426470588235 * imageWidth;
+right = 0.154411764705882
+bb = [0.397426470588235,0.479473684210526,0.154411764705882,0.218947368421053*]
 parse_params_Buffy3and4andPascal.use_fg_high = false;
 [T, sticks_imgcoor] = PoseEstimStillImage(pwd, 'Images/', pic, 1, 'full', bb, fghigh_params, parse_params_Buffy3and4andPascal, [], pm2segms_params, true);
 

@@ -16,7 +16,7 @@ img = imread(pic); % Replace with your image file
 grayImg = rgb2gray(img);
 MinContrast = 0.02;   % Minimum contrast threshold (higher means fewer keypoints)
 NumOctaves = 7;       % Number of octaves for scale-space (higher value captures more scales)
-sigma = 5;
+sigma = 10;
 % Detect SIFT features with specified parameters
 points = detectSIFTFeatures(grayImg, "NumLayersInOctave",NumOctaves, "ContrastThreshold",MinContrast, Sigma= sigma);
 % Extract feature descriptors at the detected keypoints
@@ -115,11 +115,11 @@ yCoords = validPoints.Location(clusterIndices, 2);  % y-coordinates
 Radii = sigma * validPoints.Scale(clusterIndices);
 % Find the extremities (top, bottom, left, right)
 
-top = max(min(yCoords - Radii), 1);  % Ensure top does not go below 1
-bottom = min(max(yCoords - Radii), imageHeight);  % Ensure bottom does not exceed image height
+top = max(min(yCoords), 1);  % Ensure top does not go below 1
+bottom = min(max(yCoords), imageHeight);  % Ensure bottom does not exceed image height
 
-left = max(min(xCoords - Radii), 1);  % Ensure left does not go below 1
-right = min(max(xCoords - Radii), imageWidth);  % Ensure right does not exceed image width
+left = max(min(xCoords), 1);  % Ensure left does not go below 1
+right = min(max(xCoords), imageWidth);  % Ensure right does not exceed image width
 
 % Display the result
 disp(['Cluster ', num2str(clusterId), ' extremities:']);
@@ -129,6 +129,12 @@ disp(['Left: ', num2str(left)]);
 disp(['Right: ', num2str(right)]);
 
 x = left; y = top; w = right - left; h = bottom - top;
+
+%w = round(0.218947368421053 * imageWidth);
+%h = round(0.154411764705882 * imageHeight);
+%x = round(0.397426470588235 * imageWidth);
+%y = round(0.479473684210526 * imageHeight) - h;
+
 figure(3),
 imshow(img),
 hold on;
